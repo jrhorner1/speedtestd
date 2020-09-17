@@ -6,6 +6,7 @@ import (
 	"bytes"
 	log "github.com/sirupsen/logrus"
 	"encoding/json"
+	"strconv"
 )
 
 type Speedtest struct {
@@ -55,17 +56,17 @@ type Result struct {
 	Url string
 }
 
-func RunSpeedtest() *Speedtest {
+func Run() *Speedtest {
 	args := [2]string{"", ""}
 	return speedtest(args)
 }
 
-func RunSpeedtestWithServer(server string) *Speedtest {
-	args := [2]string{"-s", server}
+func RunWithServerId(serverid int) *Speedtest {
+	args := [2]string{"-s", strconv.Itoa(serverid)}
 	return speedtest(args)
 }
 
-func RunSpeedtestWithHost(host string) *Speedtest {
+func RunWithHost(host string) *Speedtest {
 	args := [2]string{"-o", host}
 	return speedtest(args)
 }
