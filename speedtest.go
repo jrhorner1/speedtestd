@@ -12,48 +12,42 @@ import (
 type Speedtest struct {
     Type string
     Timestamp time.Time
-    Ping Ping
-    Download DataRate
-    Upload DataRate
+    Ping struct {
+		Jitter float64
+		Latency float64
+	} `json:"ping"`
+    Download struct {
+		Bandwidth int
+		Bytes int
+		Elapsed int
+	} `json:"download"`
+    Upload struct {
+		Bandwidth int
+		Bytes int
+		Elapsed int
+	} `json:"upload"`
     PacketLoss float64
     Isp string
-    Interface Interface
-    Server Server
-    Result Result
-}
-
-type Ping struct {
-	Jitter float64
-    Latency float64
-}
-
-type DataRate struct {
-	Bandwidth int
-	Bytes int
-	Elapsed int
-}
-
-type Interface struct {
-	InternalIp string
-	Name string
-	MacAddr string
-	IsVpn bool
-	ExternalIp string
-}
-
-type Server struct {
-	Id int
-	Name string
-	Location string
-	Country string
-	Host string
-	Port int
-	Ip string
-}
-
-type Result struct {
-	Id string
-	Url string
+    Interface struct {
+		InternalIp string
+		Name string
+		MacAddr string
+		IsVpn bool
+		ExternalIp string
+	} `json:"interface"`
+    Server struct {
+		Id int
+		Name string
+		Location string
+		Country string
+		Host string
+		Port int
+		Ip string
+	} `json:"server"`
+    Result struct {
+		Id string
+		Url string
+	} `json:"result"`
 }
 
 func Run() *Speedtest {
