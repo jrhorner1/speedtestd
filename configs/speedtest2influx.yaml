@@ -1,0 +1,15 @@
+influxdb:
+  address: localhost
+  port: 8086
+  database: speedtests
+  username: admin
+  password: getstickbugged
+
+speedtest:
+  server: # leave both id and name blank for auto.  if both id and name are defined, id is used
+    id:   29204 # 5 digit ID of the server to use. 
+    name: speedtest1.seiontec.com # fqdn of the server to use. 
+  interval: 300s 
+
+logging:
+  level: debug # Valid Options: panic, fatal, error, warn, info, debug, trace
