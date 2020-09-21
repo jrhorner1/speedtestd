@@ -21,7 +21,7 @@ ENV LOGGING_LEVEL = ""
 
 USER root
 
-RUN adduser --system --no-create-home --uid 1000 ookla
+RUN adduser --system --uid 1000 ookla
 
 ADD --chown=1000:1000 ${CLI_URL} /tmp/
 RUN mkdir -p ${CLI_PATH}; \
@@ -33,8 +33,11 @@ ADD --chown=1000:1000 ./speedtest2influx-v${VERSION}.tgz ${EXPORTER_PATH}
 RUN mkdir -p /etc/speedtest; \
 	chown -R 1000:1000 ${EXPORTER_PATH}; \
     ln -sf ${EXPORTER_PATH}/bin/speedtest2influx /usr/bin/speedtest2influx; \
-    ln -sf ${EXPORTER_PATH}/config/config.yaml /etc/speedtest/config.yaml;
+    ln -sf ${EXPORTER_PATH}/configs/speedtest2influx.yaml /etc/speedtest/config.yaml; \
+    apk add --no-cache libc6-compat;
 
 USER ookla
+
+RUN speedtest --accept-license
 
 CMD ["/usr/bin/speedtest2influx", "-config", "/etc/speedtest/config.yaml"]
