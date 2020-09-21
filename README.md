@@ -7,7 +7,7 @@ This program aims to run the Ookla Speedtest CLI and export the results to an In
 ### Linux  
 
 ```bash
-GOOS=linux GOARCH=arm go build -o bin/speedtest2influx src/main.go
+GOOS=linux GOARCH=arm go build -o bin/speedtest2influx cmd/speedtest2influx/main.go
 ```
 
 ### Windows  
@@ -15,7 +15,7 @@ GOOS=linux GOARCH=arm go build -o bin/speedtest2influx src/main.go
 ```powershell
 set GOOS=linux
 set GOARCH=arm
-go build -o bin/speedtest2influx src/main.go
+go build -o bin/speedtest2influx cmd/speedtest2influx/main.go
 ```
 
 ## Docker  

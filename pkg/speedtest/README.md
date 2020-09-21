@@ -11,7 +11,7 @@ package main
 
 import (
     "fmt"
-    "github.com/jrhorner1/ookla-speedtest"
+    "github.com/jrhorner1/ookla-speedtest/pkg/speedtest"
 )
 
 func main() {

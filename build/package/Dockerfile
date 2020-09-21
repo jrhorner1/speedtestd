@@ -1,8 +1,9 @@
 FROM apline:latest
 
+ARG PKGVER = "1.0.0"
 # Supported linux architectures: [ "aarch64", "arm", "armhf", "i386", "x86_64" ]
 ARG ARCH = "arm"
-ARG CLI_URL = "https://bintray.com/ookla/download/download_file?file_path=ookla-speedtest-1.0.0-${ARCH}-linux.tgz"
+ARG CLI_URL = "https://ookla.bintray.com/download/ookla-speedtest-${PKGVER}-${ARCH}-linux.tgz"
 ARG CLI_PATH = "/opt/speedtest-cli"
 
 ARG EXPORTER_PATH = /opt/speedtest2influx
