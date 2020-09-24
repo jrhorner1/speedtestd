@@ -1,19 +1,9 @@
 
 FROM --platform=$BUILDPLATFORM golang:alpine AS builder
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
 RUN mkdir /app
 COPY . /app/
 WORKDIR /app
-RUN arch="" \
-	mkdir -p bin/; \
-	case $TARGETPLATFORM in \
-		"amd64") arch="$TARGETPLATFORM" ;; \
-		"arm64") arch="$TARGETPLATFORM" ;; \
-		"arm/v7") arch="armhf" ;; \
-		"arm/v6") arch="armhf" ;; \
-	esac; \
-	GO_OS=linux GO_ARCH=$arch go build -o bin/speedtest2influx cmd/speedtest2influx/main.go
+RUN /app/scripts/build.sh $TARGETOS $TARGETARCH
 RUN /app/scripts/package.sh
 
 FROM alpine:latest
