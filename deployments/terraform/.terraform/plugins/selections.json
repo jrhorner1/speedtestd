@@ -1,0 +1,10 @@
+{
+  "registry.terraform.io/hashicorp/helm": {
+    "hash": "h1:lNIvu0axcxUHBEsZX5CceT2ArFvlckTXoGWS9286U9s=",
+    "version": "1.3.2"
+  },
+  "registry.terraform.io/hashicorp/kubernetes": {
+    "hash": "h1:/kQ/+pjVG4V9neXVt6Z3jSYYKTAM6SAnl849hFmKamE=",
+    "version": "1.13.2"
+  }
+}

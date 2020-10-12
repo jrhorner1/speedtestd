@@ -1,0 +1,10 @@
+adminUser: admin
+adminPassword: getstickbugged
+
+ingress:
+  enabled: true
+  hosts:
+    - grafana.foo.bar
+
+persistence: 
+  enabled: true
