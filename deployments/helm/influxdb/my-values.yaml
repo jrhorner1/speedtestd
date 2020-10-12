@@ -1,0 +1,18 @@
+image:
+  tag: "1.8.0"
+
+user:
+  username: "admin"
+  password: "getstickbugged"
+
+ingress:
+  enabled: true
+  hostname: influxdb.jrhorner.com
+  annotations: 
+    kubernetes.io/ingress.class: "traefik"
+
+initScripts:
+  enabled: true
+  scripts:
+    init.iql: |+
+      CREATE DATABASE "speedtests" WITH DURATION 30d REPLICATION 1 NAME "rp_30d"
