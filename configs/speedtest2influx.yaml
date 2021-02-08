@@ -1,9 +1,9 @@
 influxdb:
   address: influxdb
   port: 8086
-  database: speedtests
-  username: admin
-  password: getstickbugged
+  database: 
+  username: 
+  password: 
 
 speedtest:
   server: # leave both id and name blank for auto.  if both id and name are defined, id is used
