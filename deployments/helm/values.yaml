@@ -1,0 +1,107 @@
+# Default values for speedtest2influx.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: jrhorner/ookla-speedtest
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+  labels: {}
+  path: /
+  hosts:
+    - chart-example.local
+  extraPaths: []
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+autoscaling:
+  enabled: false
+
+# Application settings:
+config:
+  influxdb:
+    address: "speedtest-influxdb" # Influxdb server
+#    port: ""  # Influxdb server port
+    database: "speedtests" # Database to write collected stats to
+    username: "admin" # User that has access to the database
+    password: "getstickbugged" # Password for above user
+#  speedtest:
+#    interval: ""  # Delay between runs
+#    server:
+#      id: ""
+#      name: ""
+  logging:  
+    level: "info"   # Set how verbose the console output is
+    # Valid Options: critical, error, warning, info, debug
+
+# Grafana Chart configuration
+grafana:
+  enabled: true
+  adminUser: admin
+  adminPassword: getstickbugged
+
+  service:
+    type: LoadBalancer
+    
+  ingress:
+    enabled: false
+    hosts:
+      - grafana.foo.bar
+
+  persistence: 
+    enabled: true
+
+# InfluxDB Chart configuration
+influxdb: 
+  enabled: true
+  image:
+    tag: "1.8.0"
+
+  user:
+    username: "admin"
+    password: "getstickbugged"
+
+  ingress:
+    enabled: false
+    hostname: influxdb.foo.bar
+
+  initScripts:
+    enabled: true
+    scripts:
+      init.iql: |+
+        CREATE DATABASE "speedtests" WITH DURATION 30d REPLICATION 1 NAME "rp_30d"
