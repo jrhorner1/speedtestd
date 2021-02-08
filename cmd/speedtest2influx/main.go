@@ -80,10 +80,10 @@ func getEnvInt(key string, fallback int) int {
 func envConfig(config *Config) (*Config) {
 	newConfig := &Config{}
 	newConfig.Influxdb.Address = getEnv("INFLUXDB_ADDRESS", config.Influxdb.Address)
-	newConfig.Influxdb.Port = getEnvInt("INFLUXDB_ADDRESS", config.Influxdb.Port)
-	newConfig.Influxdb.Database = getEnv("INFLUXDB_ADDRESS", config.Influxdb.Database)
-	newConfig.Influxdb.Username = getEnv("INFLUXDB_ADDRESS", config.Influxdb.Username)
-	newConfig.Influxdb.Password = getEnv("INFLUXDB_ADDRESS", config.Influxdb.Password)
+	newConfig.Influxdb.Port = getEnvInt("INFLUXDB_PORT", config.Influxdb.Port)
+	newConfig.Influxdb.Database = getEnv("INFLUXDB_DATABASE", config.Influxdb.Database)
+	newConfig.Influxdb.Username = getEnv("INFLUXDB_USERNAME", config.Influxdb.Username)
+	newConfig.Influxdb.Password = getEnv("INFLUXDB_PASSWORD", config.Influxdb.Password)
 	newConfig.Speedtest.Server.Id = getEnvInt("SPEEDTEST_SERVER_ID", config.Speedtest.Server.Id)
 	newConfig.Speedtest.Server.Name = getEnv("SPEEDTEST_SERVER_NAME", config.Speedtest.Server.Name)
 	newConfig.Speedtest.Interval = getEnv("SPEEDTEST_INTERVAL", config.Speedtest.Interval)
