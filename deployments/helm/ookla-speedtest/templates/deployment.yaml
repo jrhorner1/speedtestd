@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "speedtest2influx.fullname" . }}
+  labels:
+    {{- include "speedtest2influx.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "speedtest2influx.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "speedtest2influx.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "speedtest2influx.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: INFLUXDB_ADDRESS
+              value: "{{ .Values.influxdb.address }}"
+            - name: INFLUXDB_PORT
+              value: "{{ .Values.influxdb.port }}"
+            - name: INFLUXDB_DATABASE
+              value: "{{ .Values.influxdb.database }}"
+            - name: INFLUXDB_USERNAME
+              value: "{{ .Values.influxdb.username }}"
+            - name: INFLUXDB_PASSWORD
+              value: "{{ .Values.influxdb.password }}"
+            - name: SPEEDTEST_INTERVAL
+              value: "{{ .Values.speedtest.interval }}"
+            - name: SPEEDTEST_SERVER_ID
+              value: "{{ .Values.speedtest.server.id }}"
+            - name: SPEEDTEST_SERVER_NAME
+              value: "{{ .Values.speedtest.server.name }}"
+            - name: LOGGGING_LEVEL
+              value: "{{ .Values.logging.level }}"
+

@@ -1,11 +1,12 @@
 #!/bin/sh
 
+repo="jrhorner/ookla-speedtest"
 version="0.1.0"
 
-docker buildx build . \
-	--platform linux/amd64,linux/arm64,linux/arm \
+docker build . \
 	-f ./build/package/Dockerfile \
-	--tag speedtest2influx:${version} \
-	--tag speedtest2influx:latest #\
-#	--load
-	
+	--tag ${repo}:${version} \
+	--tag ${repo}:latest
+
+docker push ${repo}:{$version}
+docker push ${repo}:latest

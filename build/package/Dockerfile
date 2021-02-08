@@ -1,9 +1,10 @@
 
-FROM --platform=$BUILDPLATFORM golang:alpine AS builder
+FROM golang:alpine AS builder
 RUN mkdir /app
 COPY . /app/
 WORKDIR /app
-RUN /app/scripts/build.sh $TARGETOS $TARGETARCH
+RUN /app/scripts/build.sh 
+#$TARGETOS $TARGETARCH
 RUN /app/scripts/package.sh
 
 FROM alpine:latest
