@@ -23,3 +23,9 @@
 # scripts/build.sh output files/folders
 bin/
 *.tgz
+
+# terraform
+.terraform
+*.tfstate
+*.backup
+*.plan
