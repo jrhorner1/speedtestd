@@ -1,17 +1,23 @@
-# .PHONY:= all build package docker
-.PHONY:= all docker
+.PHONY:= all build package 
 
-# all: build package docker
-all: docker
+version = 0.1.1
+repo = jrhorner/ookla-speedtest
 
-# build: cmd/speedtest2influx/main.go
-# 	./scripts/build.sh
+all: build
 
-# package: bin/speedtest2influx configs/speedtest2influx.yaml docs/README.txt LICENSE 
-# 	./scripts/package.sh
+build: cmd/speedtest2influx/main.go
+	docker build . -f ./build/package/Dockerfile \
+		--tag $(repo):$(version) \
+		--tag $(repo):latest
 
-docker: 
-	./scripts/docker.sh
+xbuild: cmd/speedtest2influx/main.go
+	docker buildx build . -f ./build/package/Dockerfile \
+		--platform linux/amd64,linux/arm64,linux/arm \
+		--tag $(repo):$(version) \
+		--tag $(repo):latest 
 
-# clean:
-# 	rm -rf bin/ build/package/*.tgz
+package: bin/speedtest2influx configs/speedtest2influx.yaml docs/README.txt LICENSE 
+	tar cf build/package/speedtest2influx-v$(version).tgz docs/ bin/ configs/ LICENSE \
+
+clean:
+	rm -rf bin/ build/package/*.tgz

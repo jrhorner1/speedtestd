@@ -1,16 +1,17 @@
 package main
 
 import (
-	log "github.com/sirupsen/logrus"
-	"time"
 	_ "context"
-	"github.com/influxdata/influxdb-client-go"
-	"strconv"
-	"github.com/jrhorner1/ookla-speedtest/pkg/speedtest"
-	"gopkg.in/yaml.v2"
-	"os"
-	"fmt"
 	"flag"
+	"fmt"
+	"os"
+	"strconv"
+	"time"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go"
+	"github.com/jrhorner1/ookla-speedtest/pkg/speedtest"
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
@@ -51,33 +52,33 @@ func NewConfig(configPath string) (*Config, error) {
 	return config, nil
 }
 
-func ValidateCOnfigPath(path string) error {
+func ValidateConfigPath(path string) error {
 	s, err := os.Stat(path)
 	if err != nil {
 		return err
 	}
 	if s.IsDir() {
-		return fmt.Errorf("'%s' is a directory, not a file",path)
+		return fmt.Errorf("'%s' is a directory, not a file", path)
 	}
 	return nil
 }
 
 func getEnv(key, fallback string) string {
-    if value, ok := os.LookupEnv(key); ok {
-        return value
-    }
-    return fallback
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }
 
 func getEnvInt(key string, fallback int) int {
-    if value, ok := os.LookupEnv(key); ok {
-    	intvalue, _ := strconv.Atoi(value)
-        return intvalue
-    }
-    return fallback
+	if value, ok := os.LookupEnv(key); ok {
+		intvalue, _ := strconv.Atoi(value)
+		return intvalue
+	}
+	return fallback
 }
 
-func envConfig(config *Config) (*Config) {
+func envConfig(config *Config) *Config {
 	newConfig := &Config{}
 	newConfig.Influxdb.Address = getEnv("INFLUXDB_ADDRESS", config.Influxdb.Address)
 	newConfig.Influxdb.Port = getEnvInt("INFLUXDB_PORT", config.Influxdb.Port)
@@ -95,13 +96,13 @@ func ParseFlags() (string, error) {
 	var configPath string
 	flag.StringVar(&configPath, "config", "./config.yaml", "path to config")
 	flag.Parse()
-	if err := ValidateCOnfigPath(configPath); err != nil {
+	if err := ValidateConfigPath(configPath); err != nil {
 		return "", err
 	}
 	return configPath, nil
 }
 
-func influxdbConnect(results *speedtest.Speedtest, config *Config){
+func influxdbConnect(results *speedtest.Speedtest, config *Config) {
 	influxdb_protocol := "http"
 	influxdb_server := config.Influxdb.Address
 	influxdb_port := config.Influxdb.Port
@@ -115,61 +116,60 @@ func influxdbConnect(results *speedtest.Speedtest, config *Config){
 	log.Info("Connecting to influxdb server: " + influxdb_url)
 	client := influxdb2.NewClient(influxdb_url, influxdb_token)
 
-
 	writeAPI := client.WriteAPI(influxdb_org, influxdb_database)
-    errorsCh := writeAPI.Errors()
-    go func() {
-        for err := range errorsCh {
-        	log.Error("write error:", err.Error())
-        }
+	errorsCh := writeAPI.Errors()
+	go func() {
+		for err := range errorsCh {
+			log.Error("write error:", err.Error())
+		}
 	}()
-	
-	tags := map[string]string{ 
-		"serverId": strconv.Itoa(results.Server.Id),
-		"serverName": results.Server.Name,
+
+	tags := map[string]string{
+		"serverId":       strconv.Itoa(results.Server.Id),
+		"serverName":     results.Server.Name,
 		"serverLocation": results.Server.Location,
-		"serverCountry": results.Server.Country,
-		"serverHost": results.Server.Host,
-		"serverPort": strconv.Itoa(results.Server.Port),
-		"serverIp": results.Server.Ip,
-		"isp": results.Isp}
+		"serverCountry":  results.Server.Country,
+		"serverHost":     results.Server.Host,
+		"serverPort":     strconv.Itoa(results.Server.Port),
+		"serverIp":       results.Server.Ip,
+		"isp":            results.Isp}
 
 	ping := influxdb2.NewPoint(
-		"ping", 	// measurement
-		tags, 
-		map[string]interface{}{	// fields
-			"jitter": results.Ping.Jitter,
+		"ping", // measurement
+		tags,
+		map[string]interface{}{ // fields
+			"jitter":  results.Ping.Jitter,
 			"latency": results.Ping.Latency},
 		results.Timestamp)
 	log.Debug("Writing ping measurements")
 	writeAPI.WritePoint(ping)
 
 	download := influxdb2.NewPoint(
-		"download", 	// measurement
-		tags, 
+		"download", // measurement
+		tags,
 		map[string]interface{}{
-			"bandwidth": results.Download.Bandwidth * 8,  // Value is in bytes, converting to bits
-			"bytes": results.Download.Bytes,
-			"elapsed": results.Download.Elapsed},
+			"bandwidth": results.Download.Bandwidth * 8, // Value is in bytes, converting to bits
+			"bytes":     results.Download.Bytes,
+			"elapsed":   results.Download.Elapsed},
 		results.Timestamp)
 	log.Debug("Writing download measurements")
 	writeAPI.WritePoint(download)
 
 	upload := influxdb2.NewPoint(
-		"upload", 	// measurement
-		tags, 
+		"upload", // measurement
+		tags,
 		map[string]interface{}{
-			"bandwidth": results.Upload.Bandwidth * 8,  // Value is in bytes, converting to bits
-			"bytes": results.Upload.Bytes,
-			"elapsed": results.Upload.Elapsed},
+			"bandwidth": results.Upload.Bandwidth * 8, // Value is in bytes, converting to bits
+			"bytes":     results.Upload.Bytes,
+			"elapsed":   results.Upload.Elapsed},
 		results.Timestamp)
 	log.Debug("Writing upload measurements")
 	writeAPI.WritePoint(upload)
-		
+
 	packet := influxdb2.NewPoint(
-		"packet", 	// measurement
-		tags, 
-		map[string]interface{}{	// fields
+		"packet", // measurement
+		tags,
+		map[string]interface{}{ // fields
 			"loss": results.PacketLoss},
 		results.Timestamp)
 	log.Debug("Writing packet measurements")
@@ -179,12 +179,12 @@ func influxdbConnect(results *speedtest.Speedtest, config *Config){
 		"client",
 		tags,
 		map[string]interface{}{
-			"internalIp": results.Interface.InternalIp,
-			"interfaceName": results.Interface.Name,
+			"internalIp":       results.Interface.InternalIp,
+			"interfaceName":    results.Interface.Name,
 			"interfaceMacAddr": results.Interface.MacAddr,
-			"isVpn": strconv.FormatBool(results.Interface.IsVpn),
-			"externalIp": results.Interface.ExternalIp,
-			"isp": results.Isp},
+			"isVpn":            strconv.FormatBool(results.Interface.IsVpn),
+			"externalIp":       results.Interface.ExternalIp,
+			"isp":              results.Isp},
 		results.Timestamp)
 	log.Debug("Writing client info")
 	writeAPI.WritePoint(clientData)
@@ -193,13 +193,13 @@ func influxdbConnect(results *speedtest.Speedtest, config *Config){
 		"server",
 		tags,
 		map[string]interface{}{
-			"serverId": strconv.Itoa(results.Server.Id),
-			"serverName": results.Server.Name,
+			"serverId":       strconv.Itoa(results.Server.Id),
+			"serverName":     results.Server.Name,
 			"serverLocation": results.Server.Location,
-			"serverCountry": results.Server.Country,
-			"serverHost": results.Server.Host,
-			"serverPort": strconv.Itoa(results.Server.Port),
-			"serverIp": results.Server.Ip},
+			"serverCountry":  results.Server.Country,
+			"serverHost":     results.Server.Host,
+			"serverPort":     strconv.Itoa(results.Server.Port),
+			"serverIp":       results.Server.Ip},
 		results.Timestamp)
 	log.Debug("Writing server info")
 	writeAPI.WritePoint(serverData)
@@ -208,7 +208,7 @@ func influxdbConnect(results *speedtest.Speedtest, config *Config){
 		"result",
 		tags,
 		map[string]interface{}{
-			"id": results.Result.Id,
+			"id":  results.Result.Id,
 			"url": results.Result.Url},
 		results.Timestamp)
 	log.Debug("Writing result info")
