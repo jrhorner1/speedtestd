@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "speedtest2influx.fullname" . }}
+  name: {{ include "speedtestd.fullname" . }}
   labels:
-    {{- include "speedtest2influx.labels" . | nindent 4 }}
+    {{- include "speedtestd.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "speedtest2influx.selectorLabels" . | nindent 6 }}
+      {{- include "speedtestd.selectorLabels" . | nindent 6 }}
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -16,9 +16,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "speedtest2influx.selectorLabels" . | nindent 8 }}
+        {{- include "speedtestd.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "speedtest2influx.serviceAccountName" . }}
+      serviceAccountName: {{ include "speedtestd.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:

@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: jrhorner/ookla-speedtest
-  pullPolicy: IfNotPresent
+  repository: jrhorner/speedtestd
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
@@ -57,7 +57,7 @@ config:
   influxdb:
     address: "speedtest-influxdb" # Influxdb server
 #    port: ""  # Influxdb server port
-    database: "speedtests" # Database to write collected stats to
+    database: "speedtestd" # Database to write collected stats to
     username: "admin" # User that has access to the database
     password: "getstickbugged" # Password for above user
 #  speedtest:
@@ -90,7 +90,7 @@ grafana:
 influxdb: 
   enabled: true
   image:
-    tag: "1.8.0"
+    tag: "latest"
 
   user:
     username: "admin"
@@ -104,4 +104,4 @@ influxdb:
     enabled: true
     scripts:
       init.iql: |+
-        CREATE DATABASE "speedtests" WITH DURATION 30d REPLICATION 1 NAME "rp_30d"
+        CREATE DATABASE "speedtestd" WITH DURATION 30d REPLICATION 1 NAME "rp_30d"

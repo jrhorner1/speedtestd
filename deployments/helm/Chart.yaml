@@ -1,5 +1,5 @@
 apiVersion: v2
-name: speedtest2influx
+name: speedtestd
 description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -15,24 +15,24 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.0
+version: 0.1.1
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: 1.16.0
+appVersion: 0.1.1
 
 dependencies:
   - name: grafana
     repository: https://grafana.github.io/helm-charts
-    version: 6.2.2
+    version: 6.28.0
     condition: grafana.enabled, global.grafana.enabled
     tags:
       - grafana
 
   - name: influxdb
     repository: https://helm.influxdata.com/
-    version: 4.8.12
+    version: 4.11.0
     condition: influxdb.enabled, global.influxdb.enabled
     tags:
       - influxdb
