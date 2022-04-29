@@ -56,15 +56,15 @@ autoscaling:
 config:
   influxdb:
     address: "speedtest-influxdb" # Influxdb server
-#    port: ""  # Influxdb server port
+    port: ""  # Influxdb server port
     database: "speedtestd" # Database to write collected stats to
     username: "admin" # User that has access to the database
     password: "getstickbugged" # Password for above user
-#  speedtest:
-#    interval: ""  # Delay between runs
-#    server:
-#      id: ""
-#      name: ""
+  speedtest:
+    interval: ""  # Delay between runs
+    server:
+      id: ""
+      name: ""
   logging:  
     level: "info"   # Set how verbose the console output is
     # Valid Options: critical, error, warning, info, debug
@@ -81,7 +81,7 @@ grafana:
   ingress:
     enabled: false
     hosts:
-      - grafana.foo.bar
+      - grafana.jrhorner.com
 
   persistence: 
     enabled: true
@@ -98,7 +98,7 @@ influxdb:
 
   ingress:
     enabled: false
-    hostname: influxdb.foo.bar
+    hostname: influxdb.jrhorner.com
 
   initScripts:
     enabled: true

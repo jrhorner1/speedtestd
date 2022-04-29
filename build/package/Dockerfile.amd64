@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+
+### Build ###
+FROM golang:alpine AS builder
+
+RUN mkdir -p /app/bin
+COPY . /app/
+WORKDIR /app
+RUN go build -o bin/speedtestd cmd/speedtestd/main.go 
+
+### Deploy ###
+FROM alpine:latest
+
+ARG CLI_VERSION="1.1.1"
+ARG CLI_ARCH="x86_64"
+ARG CLI_URL="https://install.speedtest.net/app/cli/ookla-speedtest-${CLI_VERSION}-linux-${CLI_ARCH}.tgz" 
+
+USER root
+
+# Setup speedtestd
+COPY --from=builder /app/bin/speedtestd /usr/bin/speedtestd
+
+RUN apk add --no-cache libc6-compat; \
+	adduser --system --uid 1000 ookla; \
+	mkdir -p /etc/speedtestd; \
+	chmod 644 /etc/speedtestd;
+
+COPY ./configs/speedtestd.yaml /etc/speedtestd/config.yaml
+
+# Get speedtest cli
+RUN wget -O /tmp/ookla-speedtest-${CLI_VERSION}-linux-${CLI_ARCH}.tgz "${CLI_URL}"; \
+	tar -xf /tmp/ookla-speedtest-${CLI_VERSION}-linux-${CLI_ARCH}.tgz -C /tmp; \
+	mv /tmp/speedtest /usr/bin/speedtest;
+
+# Cleanup tasks
+RUN rm /tmp/ookla-speedtest-${CLI_VERSION}-linux-${CLI_ARCH}.tgz /tmp/speedtest.md /tmp/speedtest.5;
+
+USER ookla
+
+RUN speedtest --accept-license --version
+
+CMD ["speedtestd", "-config", "/etc/speedtestd/config.yaml"]
