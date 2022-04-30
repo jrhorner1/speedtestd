@@ -8,7 +8,7 @@ ARCHITECTURES=( x86_64 aarch64 armhf )
 go_build () { # BEGIN go build function
     mkdir -p bin/$1 
     printf "Compiling speedtestd for $1\n\n"
-    GOOS=linux GOARCH=$1 go build -o bin/$1/speedtestd cmd/speedtestd/main.go
+    GOOS=linux GOARCH=$1 go build -o bin/$1/speedtestd speedtestd/main.go
 } # END
 
 unpack () { # BEGIN speedtest unpack function
@@ -47,7 +47,7 @@ VERSION="0.1.1"
 
 # Build the multiarch container
 printf "Building multi-arch docker container\n\n"
-docker buildx build . -f ./build/Dockerfile \
+docker buildx build . \
     --platform "linux/amd64,linux/arm64/v8,linux/arm/v7" \
     --tag ${REGISTRY}/${USER}/${REPOSITORY}:${VERSION} \
     --tag ${REGISTRY}/${USER}/${REPOSITORY}:latest \

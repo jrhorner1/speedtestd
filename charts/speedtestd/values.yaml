@@ -55,13 +55,13 @@ autoscaling:
 # Application settings:
 config:
   influxdb:
-    address: "speedtest-influxdb" # Influxdb server
+    address: "speedtestd-influxdb-0" # Influxdb server
     port: ""  # Influxdb server port
     database: "speedtestd" # Database to write collected stats to
     username: "admin" # User that has access to the database
     password: "getstickbugged" # Password for above user
   speedtest:
-    interval: ""  # Delay between runs
+    interval: "900s"  # Delay between runs
     server:
       id: ""
       name: ""

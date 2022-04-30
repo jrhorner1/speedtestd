@@ -5,8 +5,8 @@ ARG TARGETARCH
 
 COPY ./bin/${TARGETARCH}/speedtest /usr/bin/speedtest
 COPY ./bin/${TARGETARCH}/speedtestd /usr/bin/speedtestd
-COPY ./configs/speedtestd.yaml /etc/speedtestd_config.yaml
+COPY ./config.yaml /etc/speedtestd.yaml
 
 RUN speedtest --accept-license
 
-CMD ["speedtestd", "-config", "/etc/speedtestd_config.yaml"]
+CMD ["speedtestd", "-config", "/etc/speedtestd.yaml"]
