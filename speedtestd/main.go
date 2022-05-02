@@ -9,16 +9,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func ParseFlags() (string, error) {
-	var configPath string
-	flag.StringVar(&configPath, "config", "./config.yaml", "path to config")
-	flag.Parse()
-	if err := ValidateConfigPath(configPath); err != nil {
-		return "", err
-	}
-	return configPath, nil
-}
-
 func main() {
 	configPath, err := ParseFlags()
 	if err != nil {
@@ -31,27 +21,10 @@ func main() {
 
 	config = envConfig(config)
 
-	switch config.Logging.Level {
-	case "panic":
-		log.SetLevel(log.PanicLevel)
-	case "fatal":
-		log.SetLevel(log.FatalLevel)
-	case "error":
-		log.SetLevel(log.ErrorLevel)
-	case "warn":
-		log.SetLevel(log.WarnLevel)
-	case "info":
-		log.SetLevel(log.InfoLevel)
-	case "debug":
-		log.SetLevel(log.DebugLevel)
-	case "trace":
-		log.SetLevel(log.TraceLevel)
-	default:
-		log.SetLevel(log.InfoLevel)
-	}
+	log.SetLevel(logLevel(config.Logging.Level))
 
 	for {
-		var results *speedtest.Speedtest
+		var results *speedtest.Results
 		if config.Speedtest.Server.Id != 0 {
 			log.Debug("Running with server id")
 			results = speedtest.RunWithServerId(config.Speedtest.Server.Id)
@@ -70,5 +43,34 @@ func main() {
 		}
 		log.Debug("Sleep Duration: ", intervalDuration)
 		time.Sleep(intervalDuration)
+	}
+}
+
+func ParseFlags() (string, error) {
+	var configPath string
+	flag.StringVar(&configPath, "config", "./config.yaml", "path to config")
+	flag.Parse()
+	if err := ValidateConfigPath(configPath); err != nil {
+		return "", err
+	}
+	return configPath, nil
+}
+
+func logLevel(level string) log.Level {
+	switch level {
+	case "panic":
+		return 0
+	case "fatal":
+		return 1
+	case "error":
+		return 2
+	case "warn":
+		return 3
+	case "debug":
+		return 5
+	case "trace":
+		return 6
+	default: // info
+		return 4
 	}
 }

@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func influxdbConnect(results *speedtest.Speedtest, config *Config) {
+func influxdbConnect(results *speedtest.Results, config *Config) {
 	influxdb_protocol := "http"
 	influxdb_server := config.Influxdb.Address
 	influxdb_port := config.Influxdb.Port
