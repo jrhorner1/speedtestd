@@ -12,12 +12,16 @@ go_build () { # BEGIN go build function
 } # END
 
 unpack () { # BEGIN speedtest unpack function
-    mkdir -p bin/$1
-    ARCH=$2
-    printf "Downloading Ookla Speedtest CLI\n\n"
-    curl -OL "https://install.speedtest.net/app/cli/ookla-speedtest-${VERSION}-${OS}-${ARCH}.tgz"
-    printf "Unpacking Ookla Speedtest CLI\n\n"
-    tar xf ookla-speedtest-${VERSION}-${OS}-${ARCH}.tgz -C bin/$1
+    stat bin/$1/speedtest > /dev/null 
+    if [[ ! $? -eq 0 ]]; then
+        mkdir -p bin/$1
+        ARCH=$2
+        printf "Downloading Ookla Speedtest CLI\n\n"
+        curl -OL "https://install.speedtest.net/app/cli/ookla-speedtest-${VERSION}-${OS}-${ARCH}.tgz"
+        printf "Unpacking Ookla Speedtest CLI\n\n"
+        tar xf ookla-speedtest-${VERSION}-${OS}-${ARCH}.tgz --include "speedtest" -C bin/$1
+        rm ookla-speedtest-${VERSION}-${OS}-${ARCH}.tgz
+    fi
 } # END
 
 # Loop through each architecture, download the cli, build the app, then cleanup 
@@ -36,7 +40,6 @@ for ARCH in "${ARCHITECTURES[@]}"; do
             unpack "arm" ${ARCH}
             ;; 
     esac
-    rm ookla-speedtest-${VERSION}-${OS}-${ARCH}.tgz
 done
 
 # Application variables
