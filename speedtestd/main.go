@@ -19,8 +19,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	config = envConfig(config)
-
 	log.SetLevel(logLevel(config.Logging.Level))
 
 	for {

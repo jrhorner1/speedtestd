@@ -25,41 +25,4 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            {{- if .Values.config.influxdb.address }}
-            - name: INFLUXDB_ADDRESS
-              value: "{{ .Values.config.influxdb.address }}"
-            {{- end }}
-            {{- if .Values.config.influxdb.port }}
-            - name: INFLUXDB_PORT
-              value: "{{ .Values.config.influxdb.port }}"
-            {{- end }}
-            {{- if .Values.config.influxdb.database }}
-            - name: INFLUXDB_DATABASE
-              value: "{{ .Values.config.influxdb.database }}"
-            {{- end }}
-            {{- if .Values.config.influxdb.username }}
-            - name: INFLUXDB_USERNAME
-              value: "{{ .Values.config.influxdb.username }}"
-            {{- end }}
-            {{- if .Values.config.influxdb.password }}
-            - name: INFLUXDB_PASSWORD
-              value: "{{ .Values.config.influxdb.password }}"
-            {{- end }}
-            {{- if .Values.config.speedtest.interval }}
-            - name: SPEEDTEST_INTERVAL
-              value: "{{ .Values.config.speedtest.interval }}"
-            {{- end }}
-            {{- if .Values.config.speedtest.server.id }}
-            - name: SPEEDTEST_SERVER_ID
-              value: "{{ .Values.config.speedtest.server.id }}"
-            {{- end }}
-            {{- if .Values.config.speedtest.server.name }}
-            - name: SPEEDTEST_SERVER_NAME
-              value: "{{ .Values.config.speedtest.server.name }}"
-            {{- end }}
-            {{- if .Values.config.logging.level }}
-            - name: LOGGGING_LEVEL
-              value: "{{ .Values.config.logging.level }}"
-            {{- end }}
 

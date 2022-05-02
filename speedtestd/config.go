@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 
 	"gopkg.in/yaml.v2"
 )
@@ -55,33 +54,4 @@ func ValidateConfigPath(path string) error {
 		return fmt.Errorf("'%s' is a directory, not a file", path)
 	}
 	return nil
-}
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
-}
-
-func getEnvInt(key string, fallback int) int {
-	if value, ok := os.LookupEnv(key); ok {
-		intvalue, _ := strconv.Atoi(value)
-		return intvalue
-	}
-	return fallback
-}
-
-func envConfig(config *Config) *Config {
-	newConfig := &Config{}
-	newConfig.Influxdb.Address = getEnv("INFLUXDB_ADDRESS", config.Influxdb.Address)
-	newConfig.Influxdb.Port = getEnvInt("INFLUXDB_PORT", config.Influxdb.Port)
-	newConfig.Influxdb.Database = getEnv("INFLUXDB_DATABASE", config.Influxdb.Database)
-	newConfig.Influxdb.Username = getEnv("INFLUXDB_USERNAME", config.Influxdb.Username)
-	newConfig.Influxdb.Password = getEnv("INFLUXDB_PASSWORD", config.Influxdb.Password)
-	newConfig.Speedtest.Server.Id = getEnvInt("SPEEDTEST_SERVER_ID", config.Speedtest.Server.Id)
-	newConfig.Speedtest.Server.Name = getEnv("SPEEDTEST_SERVER_NAME", config.Speedtest.Server.Name)
-	newConfig.Speedtest.Interval = getEnv("SPEEDTEST_INTERVAL", config.Speedtest.Interval)
-	newConfig.Logging.Level = getEnv("LOGGING_LEVEL", config.Logging.Level)
-	return newConfig
 }
