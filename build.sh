@@ -8,7 +8,7 @@ ARCHITECTURES=( x86_64 aarch64 armhf )
 go_build () { # BEGIN go build function
     mkdir -p bin/$1 
     printf "Compiling speedtestd for $1\n\n"
-    GOOS=linux GOARCH=$1 go build -o bin/$1/speedtestd speedtestd/main.go
+    GOOS=linux GOARCH=$1 go build -o bin/$1/speedtestd speedtestd/*.go
 } # END
 
 unpack () { # BEGIN speedtest unpack function
