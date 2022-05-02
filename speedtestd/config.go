@@ -20,7 +20,7 @@ type Config struct {
 			Id   int    `yaml:"id"`
 			Name string `yaml:"name"`
 		}
-		Interval string `yaml:"interval"`
+		// Interval string `yaml:"interval"`
 	} `yaml:"speedtest"`
 	Logging struct {
 		Level string `yaml:"level"`

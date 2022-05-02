@@ -3,7 +3,6 @@ package main
 import (
 	_ "context"
 	"flag"
-	"time"
 
 	"github.com/jrhorner1/ookla-speedtest/pkg/speedtest"
 	log "github.com/sirupsen/logrus"
@@ -21,27 +20,27 @@ func main() {
 
 	log.SetLevel(logLevel(config.Logging.Level))
 
-	for {
-		var results *speedtest.Results
-		if config.Speedtest.Server.Id != 0 {
-			log.Debug("Running with server id")
-			results = speedtest.RunWithServerId(config.Speedtest.Server.Id)
-		} else if config.Speedtest.Server.Name != "" {
-			log.Debug("Running with server hostname")
-			results = speedtest.RunWithHost(config.Speedtest.Server.Name)
-		} else {
-			log.Debug("Running with default settings")
-			results = speedtest.Run()
-		}
-		influxdbConnect(results, config)
-		log.Info("Sleeping for " + config.Speedtest.Interval + "...")
-		intervalDuration, err := time.ParseDuration(config.Speedtest.Interval)
-		if err != nil {
-			log.Error("Sleep interval parse error:", err.Error())
-		}
-		log.Debug("Sleep Duration: ", intervalDuration)
-		time.Sleep(intervalDuration)
+	// for {
+	var results *speedtest.Results
+	if config.Speedtest.Server.Id != 0 {
+		log.Debug("Running with server id")
+		results = speedtest.RunWithServerId(config.Speedtest.Server.Id)
+	} else if config.Speedtest.Server.Name != "" {
+		log.Debug("Running with server hostname")
+		results = speedtest.RunWithHost(config.Speedtest.Server.Name)
+	} else {
+		log.Debug("Running with default settings")
+		results = speedtest.Run()
 	}
+	influxdbConnect(results, config)
+	// log.Info("Sleeping for " + config.Speedtest.Interval + "...")
+	// intervalDuration, err := time.ParseDuration(config.Speedtest.Interval)
+	// if err != nil {
+	// 	log.Error("Sleep interval parse error:", err.Error())
+	// }
+	// log.Debug("Sleep Duration: ", intervalDuration)
+	// time.Sleep(intervalDuration)
+	// }
 }
 
 func ParseFlags() (string, error) {

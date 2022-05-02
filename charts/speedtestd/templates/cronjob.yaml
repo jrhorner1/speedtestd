@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "speedtestd.fullname" . }}-cron
+  labels:
+    app: {{ template "speedtestd.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+  schedule: "{{ .Values.cron.schedule }}"
+  startingDeadlineSeconds: {{ .Values.cron.startingDeadlineSeconds }}
+  concurrencyPolicy: {{ .Values.cron.concurrencyPolicy }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "speedtestd.serviceAccountName" . }}
+          containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            # ports:
+            #   - name: http
+            #     containerPort: 80
+            #     protocol: TCP
+            # livenessProbe:
+            #   httpGet:
+            #     path: /
+            #     port: http
+            # readinessProbe:
+            #   httpGet:
+            #     path: /
+            #     port: http
+            volumeMounts:
+            - name: "{{ template "speedtestd.fullname" . }}-config"
+              mountPath: "/etc/speedtestd.yaml"
+              subPath: "speedtestd.yaml"
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          volumes:
+            - name: {{ template "speedtestd.fullname" . }}-config
+              configMap:
+                name: {{ template "speedtestd.fullname" . }}-config
+          restartPolicy: OnFailure

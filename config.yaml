@@ -9,7 +9,6 @@ speedtest:
   server: # leave both id and name blank for auto.  if both id and name are defined, id is used
     id:    # 5 digit ID of the server to use. 
     name:  # fqdn of the server to use. 
-  interval: 300s 
 
 logging:
   level: info # Valid Options: panic, fatal, error, warn, info, debug, trace
