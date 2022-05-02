@@ -95,7 +95,7 @@ grafana:
 influxdb: 
   enabled: true
   image:
-    tag: "latest"
+    tag: "1.8.10"
 
   user:
     username: "admin"
