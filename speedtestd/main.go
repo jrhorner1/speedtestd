@@ -9,8 +9,12 @@ import (
 )
 
 func main() {
-	configPath, err := ParseFlags()
-	if err != nil {
+	var configPath string
+	var retries int
+	flag.StringVar(&configPath, "c", "./config.yaml", "path to config")
+	flag.IntVar(&retries, "r", 3, "number of retries")
+	flag.Parse()
+	if err := ValidateConfigPath(configPath); err != nil {
 		log.Fatal(err)
 	}
 	config, err := NewConfig(configPath)
@@ -24,13 +28,13 @@ func main() {
 	var results *speedtest.Results
 	if config.Speedtest.Server.Id != 0 {
 		log.Debug("Running with server id")
-		results = speedtest.RunWithServerId(config.Speedtest.Server.Id)
+		results = speedtest.RunWithServerId(config.Speedtest.Server.Id, retries)
 	} else if config.Speedtest.Server.Name != "" {
 		log.Debug("Running with server hostname")
-		results = speedtest.RunWithHost(config.Speedtest.Server.Name)
+		results = speedtest.RunWithHost(config.Speedtest.Server.Name, retries)
 	} else {
 		log.Debug("Running with default settings")
-		results = speedtest.Run()
+		results = speedtest.Run(retries)
 	}
 	influxdbConnect(results, config)
 	// log.Info("Sleeping for " + config.Speedtest.Interval + "...")
@@ -41,16 +45,6 @@ func main() {
 	// log.Debug("Sleep Duration: ", intervalDuration)
 	// time.Sleep(intervalDuration)
 	// }
-}
-
-func ParseFlags() (string, error) {
-	var configPath string
-	flag.StringVar(&configPath, "config", "./config.yaml", "path to config")
-	flag.Parse()
-	if err := ValidateConfigPath(configPath); err != nil {
-		return "", err
-	}
-	return configPath, nil
 }
 
 func logLevel(level string) log.Level {

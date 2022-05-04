@@ -15,7 +15,8 @@ import (
 )
 
 func main() {
-    results := speedtest.Run()
+    retries := 3
+    results := speedtest.Run(retries)
     /* the bandwidth results are returned as bytes */
     fmt.Println("Download Speed: ", (results.download.bandwidth * 8)/1000000, "mbps")
     fmt.Println("Upload Speed: ", (results.upload.bandwidth * 8)/1000000, "mbps")

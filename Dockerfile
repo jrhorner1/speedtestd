@@ -9,4 +9,4 @@ COPY ./config.yaml /etc/speedtestd.yaml
 
 RUN speedtest --accept-license
 
-CMD ["speedtestd", "-config", "/etc/speedtestd.yaml"]
+CMD ["speedtestd", "-c", "/etc/speedtestd.yaml"]
