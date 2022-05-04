@@ -3,10 +3,7 @@ kind: CronJob
 metadata:
   name: {{ template "speedtestd.fullname" . }}-cron
   labels:
-    app: {{ template "speedtestd.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    {{- include "speedtestd.labels" . | nindent 4 }}
 spec:
   schedule: "{{ .Values.cron.schedule }}"
   startingDeadlineSeconds: {{ .Values.cron.startingDeadlineSeconds }}
@@ -36,6 +33,17 @@ spec:
             - name: "{{ template "speedtestd.fullname" . }}-config"
               mountPath: "/etc/speedtestd.yaml"
               subPath: "speedtestd.yaml"
+            env:
+            - name: INFLUXDB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dbCredentials.existingSecret | default (include "speedtestd.fullname" .) }}
+                  key: {{ .Values.dbCredentials.userKey | default "username" }}
+            - name: INFLUXDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dbCredentials.existingSecret | default (include "speedtestd.fullname" .) }}
+                  key: {{ .Values.dbCredentials.passwordKey | default "password" }}
           {{- with .Values.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 8 }}

@@ -52,20 +52,29 @@ tolerations: []
 
 affinity: {}
 
-# Cron configuration:
+## Cron configuration:
 cron:
   schedule: "*/15 * * * *"
   startingDeadlineSeconds: 30
   concurrencyPolicy: "Replace"
 
-# Speedtestd Configuration:
+## InfluxDB credentials secret
+dbCredentials:
+  existingSecret: false
+  existingSecretName: ""
+  ## Username/password required if not using an existing secret
+  username: "admin"
+  password: "getstickbugged"
+
+## Speedtestd configMap:
 configData:
   influxdb:
     address: "speedtestd-influxdb" # Influxdb server
     port: 8086  # Influxdb server port
     database: "speedtestd" # Database to write collected stats to
-    username: "admin" # User that has access to the database
-    password: "getstickbugged" # Password for above user
+    ## Preferably use the secret option above. 
+    # username: "admin"
+    # password: "changeme"
   # speedtest:
   #   server:
   #     id: ""
@@ -74,7 +83,7 @@ configData:
     level: "info"   # Set how verbose the console output is
     # Valid Options: critical, error, warning, info, debug
 
-# Grafana Chart configuration
+## Grafana Chart configuration
 grafana:
   enabled: true
   adminUser: admin
@@ -91,7 +100,7 @@ grafana:
   persistence: 
     enabled: true
 
-# InfluxDB Chart configuration
+## InfluxDB Chart configuration
 influxdb: 
   enabled: true
   image:
