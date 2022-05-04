@@ -14,9 +14,6 @@ func main() {
 	flag.StringVar(&configPath, "c", "./config.yaml", "path to config")
 	flag.IntVar(&retries, "r", 3, "number of retries")
 	flag.Parse()
-	if err := ValidateConfigPath(configPath); err != nil {
-		log.Fatal(err)
-	}
 	config, err := NewConfig(configPath)
 	if err != nil {
 		log.Fatal(err)
