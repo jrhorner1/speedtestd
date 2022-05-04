@@ -71,9 +71,9 @@ func speedtest(testargs [2]string, retries int) *Results {
 	for i := 0; i < retries; i++ {
 		var test *exec.Cmd
 		if testargs[0] != "" && testargs[1] != "" {
-			test = exec.Command("speedtest", "-f", "json", testargs[0], testargs[1])
+			test = exec.Command("speedtest", "--accept-license", "-f", "json", testargs[0], testargs[1])
 		} else {
-			test = exec.Command("speedtest", "-f", "json", "-vv")
+			test = exec.Command("speedtest", "--accept-license", "-f", "json")
 		}
 		var out bytes.Buffer
 		test.Stdout = &out
