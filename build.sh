@@ -46,7 +46,7 @@ done
 REGISTRY="docker.io"
 USER="jrhorner"
 REPOSITORY="speedtestd"
-VERSION="0.2.1"
+VERSION="0.2.2"
 
 # Build the multiarch container
 printf "Building multi-arch docker container\n\n"
