@@ -33,17 +33,7 @@ spec:
             - name: "{{ template "speedtestd.fullname" . }}-config"
               mountPath: "/etc/speedtestd.yaml"
               subPath: "speedtestd.yaml"
-            env:
-            - name: INFLUXDB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.dbCredentials.existingSecret | default (include "speedtestd.fullname" .) }}
-                  key: {{ .Values.dbCredentials.userKey | default "username" }}
-            - name: INFLUXDB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.dbCredentials.existingSecret | default (include "speedtestd.fullname" .) }}
-                  key: {{ .Values.dbCredentials.passwordKey | default "password" }}
+              readOnly: true
           {{- with .Values.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 8 }}
@@ -58,6 +48,7 @@ spec:
           {{- end }}
           volumes:
             - name: {{ template "speedtestd.fullname" . }}-config
-              configMap:
-                name: {{ template "speedtestd.fullname" . }}-config
+              secret:
+                secretName: {{ template "speedtestd.fullname" . }}-config
+                optional: false
           restartPolicy: OnFailure

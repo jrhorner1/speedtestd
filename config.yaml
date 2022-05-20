@@ -1,9 +1,10 @@
 influxdb:
-  address: influxdb
-  port: 8086
-  database: 
-  username: 
-  password: 
+  protocol: http
+  address: influxdb.jrhorner.com
+  port: 80
+  org: influxdata
+  bucket: speedtestd
+  token: o26ODf3KupwZ6HKdQENgKbEqr7YmnmZi6M4YVo6rxVBH8KVq7IRHxzZ0lZ45BFAZh-MKyIA1a9DH2IwAH2g5Sg==
 
 speedtest:
   server: # leave both id and name blank for auto.  if both id and name are defined, id is used

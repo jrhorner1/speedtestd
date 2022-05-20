@@ -9,20 +9,18 @@ import (
 )
 
 func influxdbConnect(results *speedtest.Results, config *Config) {
-	influxdb_protocol := "http"
+	influxdb_protocol := config.Influxdb.Protocol
 	influxdb_server := config.Influxdb.Address
 	influxdb_port := config.Influxdb.Port
 	influxdb_url := influxdb_protocol + "://" + influxdb_server + ":" + strconv.Itoa(influxdb_port)
-	influxdb_user := config.Influxdb.Username
-	influxdb_pass := config.Influxdb.Password
-	influxdb_token := influxdb_user + ":" + influxdb_pass
-	influxdb_org := ""
-	influxdb_database := config.Influxdb.Database
+	influxdb_token := config.Influxdb.Token
+	influxdb_org := config.Influxdb.Org
+	influxdb_bucket := config.Influxdb.Bucket
 
 	log.Info("Connecting to influxdb server: " + influxdb_url)
 	client := influxdb2.NewClient(influxdb_url, influxdb_token)
 
-	writeAPI := client.WriteAPI(influxdb_org, influxdb_database)
+	writeAPI := client.WriteAPI(influxdb_org, influxdb_bucket)
 	errorsCh := writeAPI.Errors()
 	go func() {
 		for err := range errorsCh {

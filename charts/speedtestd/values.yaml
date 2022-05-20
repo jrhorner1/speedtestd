@@ -58,64 +58,50 @@ cron:
   startingDeadlineSeconds: 30
   concurrencyPolicy: "Replace"
 
-## InfluxDB credentials secret
-dbCredentials:
-  existingSecret: false
-  existingSecretName: ""
-  ## Username/password required if not using an existing secret
-  username: "admin"
-  password: "getstickbugged"
-
-## Speedtestd configMap:
-configData:
-  influxdb:
-    address: "speedtestd-influxdb" # Influxdb server
-    port: 8086  # Influxdb server port
-    database: "speedtestd" # Database to write collected stats to
-    ## Preferably use the secret option above. 
-    # username: "admin"
-    # password: "changeme"
-  # speedtest:
-  #   server:
-  #     id: ""
-  #     name: ""
-  logging:  
-    level: "info"   # Set how verbose the console output is
-    # Valid Options: critical, error, warning, info, debug
+## Speedtestd configuration file secret:
+config:
+  existingSecret: ""
+  data: 
+    influxdb:
+      protocol: http
+      address: speedtestd-influxdb2
+      port: 80
+      org: influxdata
+      bucket: speedtestd
+      token: # required
+    # speedtest:
+    #   server:
+    #     id: 
+    #     name: 
+    logging:  
+      level: info
 
 ## Grafana Chart configuration
 grafana:
   enabled: true
-  adminUser: admin
-  adminPassword: getstickbugged
-
-  service:
-    type: LoadBalancer
     
   ingress:
     enabled: true
+    annotations: {}
+      # kubernetes.io/ingress.class: "nginx"
+      # kubernetes.io/tls-acme: "true"
     hosts:
-      - grafana.jrhorner.com
+      - grafana.example.com
 
   persistence: 
     enabled: true
 
-## InfluxDB Chart configuration
-influxdb: 
+## InfluxDB2 Chart configuration
+influxdb2: 
   enabled: true
-  image:
-    tag: "1.8.10"
 
-  user:
-    username: "admin"
-    password: "getstickbugged"
+  persistence:
+    size: 10Gi
 
   ingress:
-    enabled: true
-    hostname: influxdb.jrhorner.com
-
-  initScripts:
-    enabled: true
-    scripts:
-      init.iql: |+
-        CREATE DATABASE "speedtestd" WITH DURATION 30d REPLICATION 1 NAME "rp_30d"
+    enabled: false
+    # tls: true
+    annotations: {}
+      # kubernetes.io/ingress.class: "nginx"
+      # kubernetes.io/tls-acme: "true"
+    hostname: influxdb.example.com

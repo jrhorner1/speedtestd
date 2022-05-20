@@ -29,3 +29,6 @@ bin/
 *.tfstate
 *.backup
 *.plan
+
+# helm
+values.yaml

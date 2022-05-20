@@ -10,18 +10,18 @@ import (
 
 type Config struct {
 	Influxdb struct {
+		Protocol string `yaml:"protocol"`
 		Address  string `yaml:"address"`
 		Port     int    `yaml:"port"`
-		Database string `yaml:"database"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
+		Org      string `yaml:"org"`
+		Bucket   string `yaml:"bucket"`
+		Token    string `yaml:"token"`
 	} `yaml:"influxdb"`
 	Speedtest struct {
 		Server struct {
 			Id   int    `yaml:"id"`
 			Name string `yaml:"name"`
 		}
-		// Interval string `yaml:"interval"`
 	} `yaml:"speedtest"`
 	Logging struct {
 		Level string `yaml:"level"`
@@ -78,11 +78,12 @@ func getEnvInt(key string, fallback int) int {
 
 func envConfig(config *Config) *Config {
 	newConfig := &Config{}
+	newConfig.Influxdb.Protocol = getEnv("INFLUXDB_PROTOCOL", config.Influxdb.Protocol)
 	newConfig.Influxdb.Address = getEnv("INFLUXDB_ADDRESS", config.Influxdb.Address)
 	newConfig.Influxdb.Port = getEnvInt("INFLUXDB_PORT", config.Influxdb.Port)
-	newConfig.Influxdb.Database = getEnv("INFLUXDB_DATABASE", config.Influxdb.Database)
-	newConfig.Influxdb.Username = getEnv("INFLUXDB_USERNAME", config.Influxdb.Username)
-	newConfig.Influxdb.Password = getEnv("INFLUXDB_PASSWORD", config.Influxdb.Password)
+	newConfig.Influxdb.Org = getEnv("INFLUXDB_ORG", config.Influxdb.Org)
+	newConfig.Influxdb.Bucket = getEnv("INFLUXDB_BUCKET", config.Influxdb.Bucket)
+	newConfig.Influxdb.Token = getEnv("INFLUXDB_TOKEN", config.Influxdb.Token)
 	newConfig.Speedtest.Server.Id = getEnvInt("SPEEDTEST_SERVER_ID", config.Speedtest.Server.Id)
 	newConfig.Speedtest.Server.Name = getEnv("SPEEDTEST_SERVER_NAME", config.Speedtest.Server.Name)
 	newConfig.Logging.Level = getEnv("LOGGING_LEVEL", config.Logging.Level)
