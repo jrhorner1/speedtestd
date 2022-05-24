@@ -57,16 +57,17 @@ This is a sample of the JSON output from the speedtest CLI directly. All of this
     },
     "server": {
         "id": 00001,
+        "host": "speedtest.example.com",
+        "port": 8080,
         "name": "Example ISP",
         "location": "Somewhere, DC",
         "country": "United States",
-        "host": "speedtest.example.com",
-        "port": 8080,
         "ip": "1.111.1.111"
     },
     "result": {
         "id": "f9fcc30a-b2ef-625c-1c0b-957cdef95548",
-        "url": "https://www.speedtest.net/result/c/f9fcc30a-b2ef-625c-1c0b-957cdef95548"
+        "url": "https://www.speedtest.net/result/c/f9fcc30a-b2ef-625c-1c0b-957cdef95548",
+        "persisted": true
     }
 }
 ```
