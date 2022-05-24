@@ -1,0 +1,27 @@
+apiVersion: v1
+entries:
+  speedtestd:
+  - apiVersion: v2
+    appVersion: 0.3.0
+    created: "2022-05-23T20:46:43.130722-04:00"
+    dependencies:
+    - condition: grafana.enabled, global.grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      tags:
+      - grafana
+      version: 6.29.3
+    - condition: influxdb.enabled, global.influxdb.enabled
+      name: influxdb2
+      repository: https://helm.influxdata.com/
+      tags:
+      - influxdb2
+      version: 2.0.12
+    description: A Helm chart for Kubernetes
+    digest: 60e8ed1f7101ad919792b4e8559a6da4e01f994d7ede82fe46fbc21368716ce9
+    name: speedtestd
+    type: application
+    urls:
+    - https://jrhorner1.github.io/speedtestd/speedtestd-1.2.0.tgz
+    version: 1.2.0
+generated: "2022-05-23T20:46:43.127541-04:00"
