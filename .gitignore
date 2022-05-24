@@ -32,3 +32,4 @@ bin/
 
 # helm
 values.yaml
+!docs/*
