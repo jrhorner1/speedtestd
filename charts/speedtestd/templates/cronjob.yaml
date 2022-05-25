@@ -22,6 +22,16 @@ spec:
               mountPath: "/etc/speedtestd.yaml"
               subPath: "speedtestd.yaml"
               readOnly: true
+            security_context:
+              capabilities:
+                drop: [ all ]
+              allow_privilege_escalation: false
+              run_as_non_root: true
+              read_only_root_filesystem: true
+            {{- with .Values.resources }}
+            resources:
+              {{- toYaml . | nindent 10 }}
+            {{- end }}
           {{- with .Values.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 8 }}
