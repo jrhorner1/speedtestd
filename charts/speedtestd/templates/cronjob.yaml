@@ -11,7 +11,16 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+          {{- include "speedtestd.selectorLabels" . | nindent 10 }}
+          annotations:
+          {{- toYaml .Values.podAnnotations | nindent 10 }}
         spec:
+          {{- with .Values.podSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 10 }}
+          {{- end}}
           serviceAccountName: {{ include "speedtestd.serviceAccountName" . }}
           containers:
           - name: {{ .Chart.Name }}
@@ -22,27 +31,25 @@ spec:
               mountPath: "/etc/speedtestd.yaml"
               subPath: "speedtestd.yaml"
               readOnly: true
-            security_context:
-              capabilities:
-                drop: [ ALL ]
-              allow_privilege_escalation: false
-              run_as_non_root: true
-              read_only_root_filesystem: true
+            {{- with .Values.securityContext }}
+            securityContext:
+              {{- with . | nintend 14 }}
+            {{- end }}
             {{- with .Values.resources }}
             resources:
-              {{- toYaml . | nindent 10 }}
+              {{- toYaml . | nindent 14 }}
             {{- end }}
           {{- with .Values.nodeSelector }}
           nodeSelector:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- with .Values.affinity }}
           affinity:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- with .Values.tolerations }}
           tolerations:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           volumes:
             - name: {{ template "speedtestd.fullname" . }}-config
