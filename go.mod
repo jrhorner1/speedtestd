@@ -9,9 +9,9 @@ require (
 )
 
 require (
-	github.com/deepmap/oapi-codegen v1.10.1 // indirect
+	github.com/deepmap/oapi-codegen v1.11.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20210922203350-b1ad95c89adf // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150 // indirect
+	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 )
