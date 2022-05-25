@@ -78,30 +78,8 @@ config:
 
 ## Grafana Chart configuration
 grafana:
-  enabled: true
-    
-  ingress:
-    enabled: true
-    annotations: {}
-      # kubernetes.io/ingress.class: "nginx"
-      # kubernetes.io/tls-acme: "true"
-    hosts:
-      - grafana.example.com
-
-  persistence: 
-    enabled: true
+  enabled: false
 
 ## InfluxDB2 Chart configuration
 influxdb2: 
-  enabled: true
-
-  persistence:
-    size: 10Gi
-
-  ingress:
-    enabled: false
-    # tls: true
-    annotations: {}
-      # kubernetes.io/ingress.class: "nginx"
-      # kubernetes.io/tls-acme: "true"
-    hostname: influxdb.example.com
+  enabled: false
