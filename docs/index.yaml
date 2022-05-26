@@ -3,7 +3,7 @@ entries:
   speedtestd:
   - apiVersion: v2
     appVersion: 0.3.0
-    created: "2022-05-25T15:31:57.443419-04:00"
+    created: "2022-05-26T11:23:58.907653-04:00"
     dependencies:
     - condition: grafana.enabled, global.grafana.enabled
       name: grafana
@@ -24,4 +24,4 @@ entries:
     urls:
     - https://jrhorner1.github.io/speedtestd/docs/speedtestd-1.2.0.tgz
     version: 1.2.0
-generated: "2022-05-25T15:31:57.438812-04:00"
+generated: "2022-05-26T11:23:58.904347-04:00"

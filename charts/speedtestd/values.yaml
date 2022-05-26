@@ -53,6 +53,7 @@ tolerations: []
 affinity: {}
 
 ## Cron configuration:
+## https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 cron:
   schedule: "*/15 * * * *"
   startingDeadlineSeconds: 30
