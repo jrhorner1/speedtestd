@@ -6,7 +6,7 @@ This project is a Go wrapper for the Ookla Speedtest CLI that parses the output 
 
 ## Quick Start
 
-You can quickly deploy this to kubernetes as a cronjob with the included helm chart.
+You can quickly deploy this to kubernetes as a [cronjob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/) with the included helm chart.
 
 ```
 helm repo add speedtestd https://jrhorner1.github.io/speedtestd/
