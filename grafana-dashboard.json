@@ -23,11 +23,179 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 2,
   "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "OOqRh1Xnz"
+      },
+      "description": "Throughput is the actual amount of traffic flowing from a specific individual source or group of sources to a specific destination or group of destinations at a specific point in time",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "download"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "upload"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "upload"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "download"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 17,
+        "x": 0,
+        "y": 0
+      },
+      "id": 6,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Download Speed",
+          "url": "https://www.speedtest.net/about/knowledge/glossary#download"
+        },
+        {
+          "title": "Upload Speed",
+          "url": "https://www.speedtest.net/about/knowledge/glossary#upload"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "min",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "OOqRh1Xnz"
+          },
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"download\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n    |> sort(columns: [\"_time\"])\n    ",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "OOqRh1Xnz"
+          },
+          "hide": false,
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"upload\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n    |> sort(columns: [\"_time\"])\n",
+          "refId": "B"
+        }
+      ],
+      "title": "Throughput",
+      "transformations": [],
+      "transparent": true,
+      "type": "timeseries"
+    },
     {
       "datasource": {
         "type": "influxdb",
@@ -73,9 +241,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 0,
+        "h": 4,
+        "w": 7,
+        "x": 17,
         "y": 0
       },
       "id": 2,
@@ -98,7 +266,7 @@
             "type": "influxdb",
             "uid": "OOqRh1Xnz"
           },
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"download\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n    |> last()",
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"download\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n    |> sort(columns: [\"_time\"])\n    |> last()",
           "refId": "A"
         }
       ],
@@ -151,10 +319,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 0
+        "h": 4,
+        "w": 7,
+        "x": 17,
+        "y": 4
       },
       "id": 3,
       "options": {
@@ -176,7 +344,7 @@
             "type": "influxdb",
             "uid": "OOqRh1Xnz"
           },
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"upload\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n    |> last()",
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"upload\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n    |> sort(columns: [\"_time\"])\n    |> last()",
           "refId": "A"
         }
       ],
@@ -189,282 +357,7 @@
         "type": "influxdb",
         "uid": "OOqRh1Xnz"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "purple",
-                "value": null
-              },
-              {
-                "color": "blue",
-                "value": 10
-              },
-              {
-                "color": "green",
-                "value": 25
-              },
-              {
-                "color": "yellow",
-                "value": 50
-              },
-              {
-                "color": "orange",
-                "value": 75
-              },
-              {
-                "color": "red",
-                "value": 100
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 5,
-        "x": 12,
-        "y": 0
-      },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.5.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "OOqRh1Xnz"
-          },
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"ping\" and r._field == \"latency\")\n    |> group(columns: [\"latency\"])\n    |> last()",
-          "refId": "A"
-        }
-      ],
-      "title": "Current Latency",
-      "transparent": true,
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "OOqRh1Xnz"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 7,
-        "x": 17,
-        "y": 0
-      },
-      "id": 10,
-      "options": {
-        "alt_field": "",
-        "baseUrl": "https://www.speedtest.net/result/c/",
-        "height": "75",
-        "icon_field": "",
-        "open_url": {
-          "base_url": "",
-          "enable": false,
-          "metric_field": "",
-          "suffix": ""
-        },
-        "overlay": {
-          "bindings": {
-            "bindings": [],
-            "has_text": true,
-            "unbounded": "#66666620"
-          },
-          "field": "",
-          "height": {
-            "size": 5,
-            "unit": "%"
-          },
-          "position": "Top right",
-          "width": {
-            "size": 5,
-            "unit": "%"
-          }
-        },
-        "singleFill": true,
-        "slideshow": {
-          "duration": 5000,
-          "enable": false,
-          "pauseOnHover": true,
-          "transition": "Slide",
-          "transition_duration": 1000
-        },
-        "suffix": ".png",
-        "tooltip": false,
-        "tooltip_date_elapsed": false,
-        "tooltip_field": "",
-        "tooltip_include_date": false,
-        "tooltip_include_field": true,
-        "underline": {
-          "field": "",
-          "text_size": "14"
-        },
-        "width": "75"
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "OOqRh1Xnz"
-          },
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"result\" and r._field == \"id\")\n    |> group(columns: [\"id\"])\n    |> last()",
-          "refId": "A"
-        }
-      ],
-      "title": "Raw",
-      "type": "dalvany-image-panel"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "OOqRh1Xnz"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "log": 2,
-              "type": "log"
-            },
-            "showPoints": "auto",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "bps"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "A"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "download"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "B"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "upload"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 8
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "OOqRh1Xnz"
-          },
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"download\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n    ",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "OOqRh1Xnz"
-          },
-          "hide": false,
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"upload\" and r._field == \"bandwidth\")\n    |> group(columns: [\"bandwidth\"])\n",
-          "refId": "B"
-        }
-      ],
-      "title": "Bandwidth",
-      "transformations": [],
-      "transparent": true,
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "OOqRh1Xnz"
-      },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -537,25 +430,71 @@
                 "value": "jitter"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "latency"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jitter"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 17,
+        "x": 0,
         "y": 8
       },
       "id": 8,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Latency/Ping",
+          "url": "https://www.speedtest.net/about/knowledge/glossary#ping"
+        },
+        {
+          "targetBlank": true,
+          "title": "Jitter",
+          "url": "https://www.speedtest.net/about/knowledge/glossary#jitter"
+        }
+      ],
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "mean",
+            "min",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "targets": [
@@ -564,7 +503,7 @@
             "type": "influxdb",
             "uid": "OOqRh1Xnz"
           },
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"ping\" and r._field == \"latency\")\n    |> group(columns: [\"latency\"])\n    ",
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"ping\" and r._field == \"latency\")\n    |> group(columns: [\"latency\"])\n    |> sort(columns: [\"_time\"])\n    ",
           "refId": "A"
         },
         {
@@ -573,13 +512,179 @@
             "uid": "OOqRh1Xnz"
           },
           "hide": false,
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"ping\" and r._field == \"jitter\")\n    |> group(columns: [\"jitter\"])",
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"ping\" and r._field == \"jitter\")\n    |> group(columns: [\"jitter\"])\n    |> sort(columns: [\"_time\"])",
           "refId": "B"
         }
       ],
-      "title": "Ping",
+      "title": "Latency",
       "transparent": true,
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "OOqRh1Xnz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              },
+              {
+                "color": "blue",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 25
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "orange",
+                "value": 75
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 7,
+        "x": 17,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "OOqRh1Xnz"
+          },
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"ping\" and r._field == \"latency\")\n    |> group(columns: [\"latency\"])\n    |> sort(columns: [\"_time\"])\n    |> last()",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Latency",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "OOqRh1Xnz"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 12,
+        "w": 7,
+        "x": 17,
+        "y": 12
+      },
+      "id": 10,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "speedtest.net",
+          "url": "https://www.speedtest.net"
+        },
+        {
+          "targetBlank": true,
+          "title": "FAQ",
+          "url": "https://www.speedtest.net/about/knowledge/faq"
+        }
+      ],
+      "options": {
+        "alt_field": "",
+        "baseUrl": "https://www.speedtest.net/result/c/",
+        "height": "75",
+        "icon_field": "",
+        "open_url": {
+          "base_url": "https://www.speedtest.net/result/c/",
+          "enable": true,
+          "metric_field": "",
+          "suffix": ""
+        },
+        "overlay": {
+          "bindings": {
+            "bindings": [],
+            "has_text": true,
+            "unbounded": "#66666620"
+          },
+          "field": "",
+          "height": {
+            "size": 5,
+            "unit": "%"
+          },
+          "position": "Top right",
+          "width": {
+            "size": 5,
+            "unit": "%"
+          }
+        },
+        "singleFill": true,
+        "slideshow": {
+          "duration": 5000,
+          "enable": false,
+          "pauseOnHover": true,
+          "transition": "Slide",
+          "transition_duration": 1000
+        },
+        "suffix": ".png",
+        "tooltip": false,
+        "tooltip_date_elapsed": false,
+        "tooltip_field": "",
+        "tooltip_include_date": false,
+        "tooltip_include_field": true,
+        "underline": {
+          "field": "",
+          "text_size": "14"
+        },
+        "width": "75"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "OOqRh1Xnz"
+          },
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart )\n    |> filter(fn: (r) => r._measurement == \"result\" and r._field == \"id\")\n    |> group(columns: [\"id\"])\n    |> sort(columns: [\"_time\"])\n    |> last()",
+          "refId": "A"
+        }
+      ],
+      "transparent": true,
+      "type": "dalvany-image-panel"
     },
     {
       "datasource": {
@@ -604,12 +709,15 @@
               "viz": false
             },
             "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "always",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -621,18 +729,15 @@
           },
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 1
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": [
           {
@@ -643,7 +748,22 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "loss%"
+                "value": "loss"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "loss"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
               }
             ]
           }
@@ -651,20 +771,30 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 24,
+        "w": 17,
         "x": 0,
         "y": 16
       },
       "id": 12,
+      "links": [
+        {
+          "title": "Packet Loss",
+          "url": "https://www.speedtest.net/about/knowledge/glossary#packetloss"
+        }
+      ],
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "mean",
+            "min",
+            "max"
+          ],
+          "displayMode": "table",
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "targets": [
@@ -673,7 +803,7 @@
             "type": "influxdb",
             "uid": "OOqRh1Xnz"
           },
-          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"packet\" and r._field == \"loss\")\n    |> group(columns: [\"loss\"])\n    ",
+          "query": "from(bucket: \"speedtestd\")\n    |> range(start: v.timeRangeStart)\n    |> filter(fn: (r) => r._measurement == \"packet\" and r._field == \"loss\")\n    |> group(columns: [\"loss\"])\n    |> sort(columns: [\"_time\"])\n    ",
           "refId": "A"
         }
       ],
@@ -682,6 +812,7 @@
       "type": "timeseries"
     }
   ],
+  "refresh": "5m",
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
