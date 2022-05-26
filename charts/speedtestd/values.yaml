@@ -77,9 +77,11 @@ config:
       level: info
 
 ## Grafana Chart configuration
+## https://github.com/grafana/helm-charts/tree/main/charts/grafana
 grafana:
   enabled: false
 
 ## InfluxDB2 Chart configuration
+## https://github.com/influxdata/helm-charts/tree/master/charts/influxdb2
 influxdb2: 
   enabled: false
