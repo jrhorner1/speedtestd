@@ -1,9 +1,9 @@
 dependencies:
 - name: grafana
   repository: https://grafana.github.io/helm-charts
-  version: 6.33.2
+  version: 6.34.0
 - name: influxdb2
   repository: https://helm.influxdata.com/
   version: 2.1.0
-digest: sha256:733b70c8579c98587598c202b1e514269955ff0478bcdc25c19dbedb22dd31b2
-generated: "2022-08-28T02:40:34.070239746Z"
+digest: sha256:2617038f53e33df30b28e193c9c1b7ed54f26524c3d181c8c9cd345e5e29130c
+generated: "2022-08-30T03:51:45.393709285Z"
