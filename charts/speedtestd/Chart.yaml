@@ -33,7 +33,7 @@ dependencies:
 
   - name: influxdb2
     repository: https://helm.influxdata.com/
-    version: 2.1.1
+    version: 2.1.2
     condition: influxdb.enabled, global.influxdb.enabled
     tags:
       - influxdb2
